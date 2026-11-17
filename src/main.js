@@ -3,27 +3,47 @@
  * Plays one of 13 local scenes inside the vintage TV on the backdrop.
  */
 
-const VIDEO_FILES = [
-  "/scena01.mp4",
-  "/scena02.mp4",
-  "/scena03.mp4",
-  "/scena04.mp4",
-  "/scena05.mp4",
-  "/scena06.mp4",
-  "/scena07.mp4",
-  "/scena08.mp4",
-  "/scena09.mp4",
-  "/scena10.mp4",
-  "/scena11.mp4",
-  "/scena12.mp4",
-  "/scena13.mp4",
-];
+/**
+ * Resolve a file from /public for Vite (dev/build) and for raw GitHub Pages.
+ * - Vite copies public/ to the site root → BASE_URL + file
+ * - Raw Pages serves the repo as-is → /Quote_Spawn/public/file
+ */
+function mediaUrl(fileName) {
+  const encoded = fileName.replace(/ /g, "%20");
+  const viteBase = import.meta.env && import.meta.env.BASE_URL;
+  if (viteBase) {
+    return `${viteBase}${encoded}`;
+  }
+  // Native ES module on GitHub Pages (no Vite transform)
+  const pageBase = window.location.pathname.replace(/index\.html$/, "");
+  const root = pageBase.endsWith("/") ? pageBase : `${pageBase}/`;
+  return `${root}public/${encoded}`;
+}
 
+const VIDEO_FILES = [
+  "scena01.mp4",
+  "scena02.mp4",
+  "scena03.mp4",
+  "scena04.mp4",
+  "scena05.mp4",
+  "scena06.mp4",
+  "scena07.mp4",
+  "scena08.mp4",
+  "scena09.mp4",
+  "scena10.mp4",
+  "scena11.mp4",
+  "scena12.mp4",
+  "scena13.mp4",
+].map((file) => mediaUrl(file));
+
+const backdrop = document.getElementById("backdrop");
 const tvScreen = document.getElementById("tvScreen");
 const video = document.getElementById("tvVideo");
 const powerFx = document.getElementById("tvPower");
 const spawnBtn = document.getElementById("spawnBtn");
 const statusEl = document.getElementById("status");
+
+backdrop.src = mediaUrl("sfondo sito.png");
 
 /** @type {string[]} */
 let deck = [];
@@ -159,7 +179,7 @@ async function onSpawn() {
   try {
     stopCurrentPlayback();
     const src = nextScene();
-    const label = src.replace(/^\//, "");
+    const label = src.split("/").pop() || src;
     setStatus(`Carico ${label}`);
     await playScene(src);
   } finally {
