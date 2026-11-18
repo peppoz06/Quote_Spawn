@@ -241,21 +241,7 @@ function onVideoError() {
   hideScreen();
 }
 
-async function preferLandscape() {
-  try {
-    const orientation = screen.orientation;
-    if (orientation && typeof orientation.lock === "function") {
-      await orientation.lock("landscape");
-    }
-  } catch {
-    // Browsers often allow lock only in fullscreen / installed PWA.
-  }
-}
-
-spawnBtn.addEventListener("click", () => {
-  preferLandscape();
-  onSpawn();
-});
+spawnBtn.addEventListener("click", onSpawn);
 playbackBtn.addEventListener("click", onPlaybackToggle);
 video.addEventListener("ended", onEnded);
 video.addEventListener("error", onVideoError);
@@ -271,14 +257,6 @@ video.addEventListener("pause", () => {
     setPlaybackUi(false);
   }
 });
-
-document.addEventListener(
-  "click",
-  () => {
-    preferLandscape();
-  },
-  { once: true },
-);
 
 // Ensure nothing autoplays on load.
 hideScreen();
