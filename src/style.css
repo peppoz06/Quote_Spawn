@@ -215,13 +215,15 @@ body {
   appearance: none;
   border: 1px solid rgba(243, 230, 200, 0.3);
   border-radius: 0.4em;
-  padding: 0.35em 0.75em;
+  min-width: 2em;
+  min-height: 2em;
+  padding: 0.3em 0.45em;
   background: linear-gradient(180deg, #5a3a28 0%, #2e1a10 100%);
   color: var(--cream-soft);
   font-family: inherit;
-  font-size: clamp(0.7rem, 1.1vw, 0.95rem);
+  font-size: clamp(0.85rem, 1.25vw, 1.1rem);
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
   line-height: 1;
   cursor: pointer;
   box-shadow:

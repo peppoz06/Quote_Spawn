@@ -94,7 +94,8 @@ function flashPowerOn() {
 }
 
 function setPlaybackUi(playing) {
-  playbackBtn.textContent = playing ? "Pausa" : "Riprendi";
+  // Standard media symbols: ⏸ pause, ▶ play
+  playbackBtn.textContent = playing ? "⏸" : "▶";
   playbackBtn.setAttribute("aria-label", playing ? "Pausa" : "Riprendi");
 }
 
