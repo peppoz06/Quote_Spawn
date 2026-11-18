@@ -205,6 +205,52 @@ body {
   }
 }
 
+/* —— Playback toggle (under the TV) —— */
+.playback-btn {
+  position: absolute;
+  z-index: 4;
+  left: 74.3%;
+  top: 59.2%;
+  transform: translate(-50%, -50%);
+  appearance: none;
+  border: 1px solid rgba(243, 230, 200, 0.3);
+  border-radius: 0.4em;
+  padding: 0.35em 0.75em;
+  background: linear-gradient(180deg, #5a3a28 0%, #2e1a10 100%);
+  color: var(--cream-soft);
+  font-family: inherit;
+  font-size: clamp(0.7rem, 1.1vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow:
+    0 1px 0 rgba(255, 235, 200, 0.12) inset,
+    0 3px 10px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease,
+    opacity 0.2s ease;
+}
+
+.playback-btn[hidden] {
+  display: none;
+}
+
+.playback-btn:hover,
+.playback-btn:focus-visible {
+  filter: brightness(1.1);
+}
+
+.playback-btn:focus-visible {
+  outline: 2px solid var(--cream-soft);
+  outline-offset: 2px;
+}
+
+.playback-btn:active {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
 /* —— Button —— */
 .spawn-btn {
   position: absolute;
@@ -312,6 +358,13 @@ body {
   .spawn-btn:active {
     transform: translateX(-50%) scale(0.96);
   }
+
+  .playback-btn {
+    left: 74%;
+    top: 58.5%;
+    font-size: 0.75rem;
+    padding: 0.4em 0.7em;
+  }
 }
 
 @media (max-height: 520px) and (orientation: landscape) {
@@ -334,11 +387,18 @@ body {
     font-size: clamp(0.8rem, 2.8vh, 1.1rem);
     padding: 0.55em 1em;
   }
+
+  .playback-btn {
+    left: 74%;
+    top: 62%;
+    font-size: clamp(0.65rem, 2.2vh, 0.85rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .tv-screen,
-  .spawn-btn {
+  .spawn-btn,
+  .playback-btn {
     transition: none;
   }
 

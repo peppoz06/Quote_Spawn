@@ -41,6 +41,7 @@ const tvScreen = document.getElementById("tvScreen");
 const video = document.getElementById("tvVideo");
 const powerFx = document.getElementById("tvPower");
 const spawnBtn = document.getElementById("spawnBtn");
+const playbackBtn = document.getElementById("playbackBtn");
 const statusEl = document.getElementById("status");
 
 backdrop.src = mediaUrl("sfondo sito.png");
@@ -92,11 +93,27 @@ function flashPowerOn() {
   powerFx.classList.add("is-flashing");
 }
 
+function setPlaybackUi(playing) {
+  playbackBtn.textContent = playing ? "Pausa" : "Riprendi";
+  playbackBtn.setAttribute("aria-label", playing ? "Pausa" : "Riprendi");
+}
+
+function showPlaybackBtn() {
+  playbackBtn.hidden = false;
+  setPlaybackUi(!video.paused);
+}
+
+function hidePlaybackBtn() {
+  playbackBtn.hidden = true;
+  setPlaybackUi(true);
+}
+
 function hideScreen() {
   tvScreen.classList.remove("is-on");
   tvScreen.setAttribute("aria-hidden", "true");
   video.removeAttribute("src");
   video.load();
+  hidePlaybackBtn();
 }
 
 function stopCurrentPlayback() {
@@ -104,6 +121,7 @@ function stopCurrentPlayback() {
     playAbort.abort();
     playAbort = null;
   }
+  hidePlaybackBtn();
   video.pause();
   video.removeAttribute("src");
   video.load();
@@ -162,6 +180,8 @@ async function playScene(src) {
       await playPromise;
     }
 
+    showPlaybackBtn();
+    setPlaybackUi(true);
     setStatus("Riproduzione in corso");
   } catch (err) {
     if (err?.name === "AbortError") return;
@@ -169,6 +189,26 @@ async function playScene(src) {
     setStatus("Errore nel caricamento della scena. Riprova.");
     hideScreen();
   }
+}
+
+async function onPlaybackToggle() {
+  if (!video.getAttribute("src") && !video.currentSrc) return;
+
+  if (video.paused) {
+    try {
+      await video.play();
+      setPlaybackUi(true);
+      setStatus("Riproduzione in corso");
+    } catch (err) {
+      console.error(err);
+      setStatus("Impossibile riprendere la riproduzione.");
+    }
+    return;
+  }
+
+  video.pause();
+  setPlaybackUi(false);
+  setStatus("In pausa");
 }
 
 async function onSpawn() {
@@ -201,8 +241,21 @@ function onVideoError() {
 }
 
 spawnBtn.addEventListener("click", onSpawn);
+playbackBtn.addEventListener("click", onPlaybackToggle);
 video.addEventListener("ended", onEnded);
 video.addEventListener("error", onVideoError);
+video.addEventListener("play", () => {
+  if (video.getAttribute("src") || video.currentSrc) {
+    showPlaybackBtn();
+    setPlaybackUi(true);
+  }
+});
+video.addEventListener("pause", () => {
+  if (!video.ended && (video.getAttribute("src") || video.currentSrc)) {
+    showPlaybackBtn();
+    setPlaybackUi(false);
+  }
+});
 
 // Ensure nothing autoplays on load.
 hideScreen();
