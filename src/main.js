@@ -190,13 +190,13 @@ async function onSpawn() {
 }
 
 function onEnded() {
-  setStatus("Fine scena. Premi di nuovo Famm' vrè!");
+  setStatus("Fine scena. Premi di nuovo Mostra!");
   hideScreen();
 }
 
 function onVideoError() {
   if (!video.getAttribute("src")) return;
-  setStatus("Errore di riproduzione. Premi di nuovo Famm' vrè!");
+  setStatus("Errore di riproduzione. Premi di nuovo Mostra!");
   hideScreen();
 }
 
@@ -207,4 +207,4 @@ video.addEventListener("error", onVideoError);
 // Ensure nothing autoplays on load.
 hideScreen();
 refillDeck();
-setStatus("Pronto. Premi Famm' vrè!");
+setStatus("Pronto. Premi Mostra!");
